@@ -1,7 +1,5 @@
 #include <iostream>
 
-using namespace std;
-
 void enigma(char *result, const char *DATA, const char *RINGS, const char *POSITIONS) {
   const char REFLECTOR[] = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
   const char ROTOR[3][27] = {
@@ -43,8 +41,6 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
           offset[l] = 0;
         }
       }
-      // cout << "offset[" << l+0 << "] " << offset[l]+0 << endl;
-
     }
 
     for (uint8_t l = 0; l < ringsCount + 1; l++) {
@@ -55,7 +51,6 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
         a = a > 25 ? a - ('Z' - 'A' + 1) : a;
         a = ROTOR[l][a];
         
-        // cout << "FIRST ROTOR l " << l+0 << " a " << a+0 << " " << (char)(a+0) << endl;
       } else if (l == ringsCount) {
         a = a - ('Z'+1 - (RINGS[l-1] - 'A'));
         a = a < 0 ? a + ('Z' - 'A' + 1) : a;
@@ -64,13 +59,12 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
         a = REFLECTOR[a];
         a = a + offset[l-1];
         a = a > 90 ? a - ('Z' - 'A' + 1) : a;
-        // cout << "REFLECTOR l " << l+0 << " a " << a+0 << " " << (char)(a+0) << endl;
+
       } else {
         if (offset[l - 1]) a = a - offset[l - 1];
         a = a < 65 ? a + ('Z' - 'A' + 1) : a;
 
         a = (a + (('Z'+1 - (RINGS[l] - 'A')) - ('Z'+1 - (RINGS[l-1] - 'A')))) - 'A';
-
         a = a > 25 ? a - ('Z' - 'A' + 1) : a;
         a = a < 0 ? a + ('Z' - 'A' + 1) : a;
 
@@ -79,7 +73,6 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
 
         a = ROTOR[l][a];
         
-        // cout << "OTHER ROTORS l " << l+0 << " a " << a+0 << " " << (char)(a+0) << endl;
       }
     }
 
@@ -94,7 +87,6 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
           }
         }
         
-        // cout << "AFTER REFLECTOR l " << l+0 << " a " << a+0 << " " << (char)(a+0) << endl;
       } else if (l == 0) {
         a = a < 0 ? a + ('Z' - 'A' + 1) : a;
         a = a - ('Z'+1 - (RINGS[l] - 'A'));
@@ -103,7 +95,6 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
         a = a - offset[l];
         a = a < 65 ? a + ('Z' - 'A' + 1) : a;
         
-        // cout << "LAST ROTOR l " << l+0 << " a " << a+0 << " " << (char)(a+0) << endl;
       } else {
         if (offset[l - 1]) a = a + offset[l - 1];
 
@@ -120,13 +111,8 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
             break;
           }
         }
-        
-        // cout << "OTHER ROTORS l " << l+0 << " a " << a+0 << " " << (char)(a+0) << endl;
       }
     }
-
-    // cout << " i " << i+0 << " a " << a+0 << " " << (char)(a+0) << endl;
-
     result[i] = a;
   }
   free(offset);

@@ -21,7 +21,7 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
   }
   
   for (uint32_t i = 0; DATA[i]; i++) {
-    int16_t a = 0;
+    int8_t a = 0;
 
     for (uint8_t l = 0; l < ringsCount; l++) {
       if (l > 0) {
@@ -65,6 +65,7 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
         a = a < 65 ? a + ('Z' - 'A' + 1) : a;
 
         a = (a + (('Z'+1 - (RINGS[l] - 'A')) - ('Z'+1 - (RINGS[l-1] - 'A')))) - 'A';
+
         a = a > 25 ? a - ('Z' - 'A' + 1) : a;
         a = a < 0 ? a + ('Z' - 'A' + 1) : a;
 
@@ -72,7 +73,6 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
         a = a > 25 ? a - ('Z' - 'A' + 1) : a;
 
         a = ROTOR[l][a];
-        
       }
     }
 
@@ -113,18 +113,19 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
         }
       }
     }
+
     result[i] = a;
   }
   free(offset);
 }
 
 int main() {
-  char *result = new char[4];
+  char *result = new char[64];
     
   enigma(
     result,
-    "AAAAAAAAAAAAAAAAAAAAAAAA",
-    "DAA",
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "AAA",
     "AAA"
   );
   
@@ -133,7 +134,7 @@ int main() {
   enigma(
     result,
     result,
-    "DAA",
+    "AAA",
     "AAA"
   );
   

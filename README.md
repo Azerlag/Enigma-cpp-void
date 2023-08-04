@@ -1,6 +1,6 @@
 # Enigma
 
-The Enigma function in online C++ compiler: https://onlinegdb.com/cQbkdFXAQ
+The Enigma function in online C++ compiler: https://onlinegdb.com/G2baZG6VL
 
 ## How to use
 

@@ -1,6 +1,6 @@
 #include <iostream>
 
-void enigma(char *result, const char *DATA, const char *RINGS, const char *POSITIONS) {
+void enigma(char *data, const char *RINGS, const char *POSITIONS) {
   const char REFLECTOR[] = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
   const char ROTOR[3][27] = {
     "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
@@ -16,13 +16,11 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
   
   uint8_t *offset = new uint8_t[ringsCount];
   
-   for (uint8_t i = 0;; i++) {
+  for (uint8_t i = 0;; i++) {
     if (POSITIONS[i]) offset[i] = POSITIONS[i] - 'A'; else break;
   }
   
-  for (uint32_t i = 0; DATA[i]; i++) {
-    int8_t a = 0;
-
+  for (uint32_t i = 0; data[i]; i++) {
     for (uint8_t l = 0; l < ringsCount; l++) {
       if (l > 0) {
         if (offset[l] > 25) {
@@ -45,102 +43,101 @@ void enigma(char *result, const char *DATA, const char *RINGS, const char *POSIT
 
     for (uint8_t l = 0; l < ringsCount + 1; l++) {
       if (l == 0) {
-        a = ((('Z'+1 - (RINGS[l] - 'A')) - 'A') + DATA[i] - 'A');
-        a = a > 25 ? a - ('Z' - 'A' + 1) : a;
-        a = a + offset[l];
-        a = a > 25 ? a - ('Z' - 'A' + 1) : a;
-        a = ROTOR[l][a];
+        data[i] = ((('Z'+1 - (RINGS[l] - 'A')) - 'A') + data[i] - 'A');
+        data[i] = data[i] > 25 ? data[i] - ('Z' - 'A' + 1) : data[i];
+        data[i] = data[i] + offset[l];
+        data[i] = data[i] > 25 ? data[i] - ('Z' - 'A' + 1) : data[i];
+        data[i] = ROTOR[l][data[i]];
         
       } else if (l == ringsCount) {
-        a = a - ('Z'+1 - (RINGS[l-1] - 'A'));
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
-        a = a - offset[l-1];
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
-        a = REFLECTOR[a];
-        a = a + offset[l-1];
-        a = a > 90 ? a - ('Z' - 'A' + 1) : a;
+        data[i] = data[i] - ('Z'+1 - (RINGS[l-1] - 'A'));
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
+        data[i] = data[i] - offset[l-1];
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
+        data[i] = REFLECTOR[data[i]];
+        data[i] = data[i] + offset[l-1];
+        data[i] = data[i] > 90 ? data[i] - ('Z' - 'A' + 1) : data[i];
 
       } else {
-        if (offset[l - 1]) a = a - offset[l - 1];
-        a = a < 65 ? a + ('Z' - 'A' + 1) : a;
+        if (offset[l - 1]) data[i] = data[i] - offset[l - 1];
+        data[i] = data[i] < 65 ? data[i] + ('Z' - 'A' + 1) : data[i];
 
-        a = (a + (('Z'+1 - (RINGS[l] - 'A')) - ('Z'+1 - (RINGS[l-1] - 'A')))) - 'A';
+        data[i] = (data[i] + (('Z'+1 - (RINGS[l] - 'A')) - ('Z'+1 - (RINGS[l-1] - 'A')))) - 'A';
+        data[i] = data[i] > 25 ? data[i] - ('Z' - 'A' + 1) : data[i];
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
 
-        a = a > 25 ? a - ('Z' - 'A' + 1) : a;
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
-
-        if (l > 0) a = a + offset[l];
-        a = a > 25 ? a - ('Z' - 'A' + 1) : a;
-
-        a = ROTOR[l][a];
+        if (l > 0) data[i] = data[i] + offset[l];
+        data[i] = data[i] > 25 ? data[i] - ('Z' - 'A' + 1) : data[i];
+        
+        data[i] = ROTOR[l][data[i]];
+        
       }
     }
 
     for (int8_t l = ringsCount; l > -1; l--) {
       if (l == ringsCount) {
-        a = a - 'A' + ('Z'+1 - (RINGS[l-1] - 'A')) - 'A';
-        a = a > 25 ? a - ('Z' - 'A' + 1) : a;
+        data[i] = data[i] - 'A' + ('Z'+1 - (RINGS[l-1] - 'A')) - 'A';
+        data[i] = data[i] > 25 ? data[i] - ('Z' - 'A' + 1) : data[i];
         for (uint8_t b = 0; b < 26; b++) {
-          if (a == ROTOR[l - 1][b] - 'A') {
-            a = b + 'A';
+          if (data[i] == ROTOR[l - 1][b] - 'A') {
+            data[i] = b + 'A';
             break;
           }
         }
         
       } else if (l == 0) {
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
-        a = a - ('Z'+1 - (RINGS[l] - 'A'));
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
-        a = a + 'A';
-        a = a - offset[l];
-        a = a < 65 ? a + ('Z' - 'A' + 1) : a;
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
+        data[i] = data[i] - ('Z'+1 - (RINGS[l] - 'A'));
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
+        data[i] = data[i] + 'A';
+        data[i] = data[i] - offset[l];
+        data[i] = data[i] < 65 ? data[i] + ('Z' - 'A' + 1) : data[i];
         
       } else {
-        if (offset[l - 1]) a = a + offset[l - 1];
+        if (offset[l - 1]) data[i] = data[i] + offset[l - 1];
 
-        a = a - (('Z'+1 - (RINGS[l] - 'A')) - ('Z'+1 - (RINGS[l-1] - 'A'))) - 'A';
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
-        a = a > 25 ? a - ('Z' - 'A' + 1) : a;
+        data[i] = data[i] - (('Z'+1 - (RINGS[l] - 'A')) - ('Z'+1 - (RINGS[l-1] - 'A'))) - 'A';
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
+        data[i] = data[i] > 25 ? data[i] - ('Z' - 'A' + 1) : data[i];
 
-        if (l > 0) a = a - offset[l];
-        a = a < 0 ? a + ('Z' - 'A' + 1) : a;
+        if (l > 0) data[i] = data[i] - offset[l];
+        data[i] = data[i] < 0 ? data[i] + ('Z' - 'A' + 1) : data[i];
 
         for (uint8_t b = 0; b < 26; b++) {
-          if (a == ROTOR[l - 1][b] - 'A') {
-            a = b + 'A';
+          if (data[i] == ROTOR[l - 1][b] - 'A') {
+            data[i] = b + 'A';
             break;
           }
         }
       }
     }
-
-    result[i] = a;
   }
   free(offset);
 }
 
 int main() {
-  char *result = new char[64];
-    
-  enigma(
-    result,
-    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    "AAA",
-    "AAA"
-  );
-  
-  std::cout << result << std::endl;
-  
-  enigma(
-    result,
-    result,
-    "AAA",
-    "AAA"
-  );
-  
-  std::cout << result << std::endl;
+  char *data = new char[32];
+  if (data == nullptr) return 0;
 
-  free(result);
+  for (uint16_t i = 0; i < 32; i++) data[i] = 'A';
+
+  enigma(
+    data,
+    "BAA",
+    "AAA"
+  );
   
-  return 0;
+  std::cout << data << std::endl;
+  
+  enigma(
+    data,
+    "BAA",
+    "AAA"
+  );
+  
+  std::cout << data << std::endl;
+
+  free(data);
+  
+  return 1;
 }

@@ -9,12 +9,10 @@ void enigma(char *data, const char *RINGS, const char *POSITIONS) {
   };
   
   uint8_t ringsCount = 0;
-
-  for (uint8_t i = 0;; i++) {
-    if (RINGS[i]) ringsCount++; else break;
-  }
+  for (uint8_t i = 0;; i++) if (RINGS[i]) ringsCount++; else break;
   
   uint8_t *offset = new uint8_t[ringsCount];
+  if (offset == nullptr) return;
   
   for (uint8_t i = 0;; i++) {
     if (POSITIONS[i]) offset[i] = POSITIONS[i] - 'A'; else break;

@@ -1,40 +1,38 @@
 # Enigma
 
-The function in online C++ compiler: https://onlinegdb.com/TG2Gft6y4
+The Enigma function in online C++ compiler: https://onlinegdb.com/cQbkdFXAQ
 
 ## How to use
 
 Like an another void function, the only thing necessary is to allocate memory to a char array variable and pass it to fun:
 
 ```cpp
-char *result = new char[64];          // 64 or as much as need
+char *result = new char[32];          // 32 or as much as need
+if (result == nullptr) return 0;
 ```
 ----
 What is what in fun:
 
 ```cpp
+for (uint16_t i = 0; i < 32; i++) result[i] = 'A';
+
 enigma(
-  result,                             // char *result             Where encoded/decoded data will be write
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", // const char *DATA         A data that will be encoded/decoded
-  "AAA",                              // const char *RINGS        Pre-installation rings of rotors
+  result,                             // char *result             Passed data that will mutated to encoded/decoded
+  "BAA",                              // const char *RINGS        Pre-installation rings of rotors
   "AAA"                               // const char *POSITIONS    Pre-installation positions of rotors
 );
 
-std::cout << result << std::endl;     // FTZMGISXIPJWGDNJJCOQTYRIGDMXFIES
+std::cout << result << std::endl;     // NFTZMGISXIPJWGDNEJCOQTYRIGDMXFIE
 ```
-### Note
-And here with configure of RINGS and POSITIONS appears a small code annoyance - values of RINGS/POSITIONS by sequence are mismatched with sequrnce of the rotors, to be more specifically: they are mirrored. So rotors setting by ring or position happens like: in "BAA" 'B' affects to last rotor that is defined in the code, not to first. And rotors themselves inversed too.
-
-----
-Reflector and rotors is pre-installed by hands in code. Also can be passed your custom rotors, not just historical ones, and more than three too.
+Reflector and rotors configurations themselves are defined by hands in code. Also can be passed your custom rotors, not just historical ones, and more than three too.
 
 ```cpp
-void enigma(char *result, const char *DATA, const char *RINGS, const char *POSITIONS) {
+void enigma(char *data, const char *RINGS, const char *POSITIONS) {
   const char REFLECTOR[] = "YRUHQSLDPXNGOKMIEBFZCWVJAT";  // UKW-B
   const char ROTOR[3][27] = {                             //
-    "EKMFLGDQVZNTOWYHXUSPAIBRCJ",                         // I      last
-    "AJDKSIRUXBLHWTMCQGZNPYFVOE",                         // II     second
-    "BDFHJLCPRTXVZNYEIWGAKMUSQO",                         // III    first
+    "EKMFLGDQVZNTOWYHXUSPAIBRCJ",                         // I
+    "AJDKSIRUXBLHWTMCQGZNPYFVOE",                         // II
+    "BDFHJLCPRTXVZNYEIWGAKMUSQO",                         // III
   };
   
 ...

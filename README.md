@@ -17,9 +17,9 @@ What is what in fun:
 for (uint16_t i = 0; i < 32; i++) result[i] = 'A';
 
 enigma(
-  result,                             // char *result             Passed data that will mutated to encoded/decoded
-  "BAA",                              // const char *RINGS        Pre-installation rings of rotors
-  "AAA"                               // const char *POSITIONS    Pre-installation positions of rotors
+  result,                             // char *data             Passed data that will mutated to encoded/decoded
+  "BAA",                              // const char *RINGS      Pre-installation rings of rotors
+  "AAA"                               // const char *POSITIONS  Pre-installation positions of rotors
 );
 
 std::cout << result << std::endl;     // NFTZMGISXIPJWGDNEJCOQTYRIGDMXFIE
